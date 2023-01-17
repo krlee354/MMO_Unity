@@ -5,9 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    public float _speed = 15.0f;
+    float _speed = 10.0f;
 
-    //bool _moveToDest = false; // 이동을 이런 식으로 bool형태로 관리했었지만, state 패턴으로 변경
     Vector3 _destPos;
 
     // Start is called before the first frame update
@@ -15,20 +14,22 @@ public class PlayerController : MonoBehaviour
     {
         Managers.Input.MouseAction -= OnMouseClicked;
         Managers.Input.MouseAction += OnMouseClicked;
+
+        //Managers.Resource.Instantiate("UI/UI_Button"); // ResourceManager에서 UI_Button Prefab 호출
     }
 
-    public enum PlayerState // Player의 상태
+    public enum PlayerState
     {
-        Die, // 죽음
-        Moving, // 움직임
-        Idle // 멈춤
+        Die,
+        Moving,
+        Idle
     }
 
-    PlayerState _state = PlayerState.Idle; // 초기 상태를 멈춤으로 세팅
+    PlayerState _state = PlayerState.Idle;
 
     void UpdateDie()
     {
-        // 아무것도 못함
+
     }
 
     void UpdateMoving()
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
         Vector3 dir = _destPos - transform.position;
         if (dir.magnitude < 0.0001f)
         {
-            _state = PlayerState.Idle; // 멈춘 상태
+            _state = PlayerState.Idle;
         }
         else
         {
@@ -47,32 +48,29 @@ public class PlayerController : MonoBehaviour
         }
 
         // 애니메이션
-        Animator anim = GetComponent<Animator>(); // Animator Component 불러오기
-        // 현재 게임상태에대한 값을 애니메이터의 파라미터로 넘긴다.
+        Animator anim = GetComponent<Animator>();
         anim.SetFloat("speed", _speed);
     }
 
     void UpdateIdle()
     {
         // 애니메이션
-        Animator anim = GetComponent<Animator>(); // Animator Component 불러오기
-        // 현재 게임상태에대한 값을 애니메이터의 파라미터로 넘긴다.
+        Animator anim = GetComponent<Animator>();
         anim.SetFloat("speed", 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //state 패턴
         switch (_state)
         {
-            case PlayerState.Die: // 죽은 상태라면
+            case PlayerState.Die:
                 UpdateDie();
                 break;
-            case PlayerState.Moving: // 움직이는 상태라면
+            case PlayerState.Moving:
                 UpdateMoving();
                 break;
-            case PlayerState.Idle: // 멈춘 상태라면
+            case PlayerState.Idle:
                 UpdateIdle();
                 break;
         }
@@ -80,9 +78,9 @@ public class PlayerController : MonoBehaviour
 
     void OnMouseClicked(Define.MouseEvent e)
     {
-        if (_state == PlayerState.Die) // 죽은 상태라면
+        if (_state == PlayerState.Die)
         {
-            return; // 마우스 이벤트가 있어도 그냥 return
+            return;
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -93,7 +91,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))
         {
             _destPos = hit.point;
-            _state = PlayerState.Moving; // 움직이는 상태
+            _state = PlayerState.Moving;
         }
     }
 }

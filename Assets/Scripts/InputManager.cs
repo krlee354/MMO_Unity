@@ -2,41 +2,42 @@ using System; // Action 사용하기 위함
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems; // EventSystem 사용하기 위함
 
 public class InputManager
 {
     public Action KeyAction = null;
     public Action<Define.MouseEvent> MouseAction = null;
 
-    bool _pressed = false; // 마우스 눌림 여부
+    bool _pressed = false;
 
-    // Update is called once per frame
     public void OnUpdate()
     {
-        /*if (Input.anyKey == false)
+        // UI를 클릭해도 계속 이벤트를 발생시키기 때문에 캐릭터가 이동하는 상황을 방지하기 위해 추가
+        if (EventSystem.current.IsPointerOverGameObject()) // UI Object가 클릭되었다면
         {
-            return;
-        }*/ // 마우스 입력이 씹히는 경우를 방지하기 위해 바로 아래 코드랑 합침
-
-        if (Input.anyKey && KeyAction != null) // 어떠한 Key 입력이 있었고, KeyAction이 있었다면
-        {
-            KeyAction.Invoke(); // 구독한 곳에 KeyAction이 있었다고 전파
+            return; // 그냥 return
         }
 
-        if (MouseAction != null) // MouseAction이 있었다면
+        if (Input.anyKey && KeyAction != null)
         {
-            if (Input.GetMouseButton(0)) // 왼쪽 마우스 버튼을 눌렀을 때
+            KeyAction.Invoke();
+        }
+
+        if (MouseAction != null)
+        {
+            if (Input.GetMouseButton(0))
             {
-                MouseAction.Invoke(Define.MouseEvent.Press); // 구독한 곳에 Press이벤트라고 전파
-                _pressed = true; // 마우스 눌렸다고 변경
+                MouseAction.Invoke(Define.MouseEvent.Press);
+                _pressed = true;
             }
-            else // 왼쪽 마우스 버튼을 뗐을 때
+            else
             {
-                if (_pressed) // 방금전에 마우스를 누르고 있었다면
+                if (_pressed)
                 {
-                    MouseAction.Invoke(Define.MouseEvent.Click); // 구독한 곳에 Click이벤트라고 전파
+                    MouseAction.Invoke(Define.MouseEvent.Click);
                 }
-                _pressed = false; // 다시 마우스 눌리지 않은 것으로 변경
+                _pressed = false;
             }
         }
     }
