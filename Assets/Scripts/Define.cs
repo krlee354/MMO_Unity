@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class Define
 {
-    public enum CameraMode //카메라 모드
+    public enum CameraMode
     {
         QuarterView
     }
 
-    public enum MouseEvent // 마우스 모드
+    public enum MouseEvent
     {
-        Press, // 누르고 있는 상태
-        Click // 클릭
+        Press,
+        Click
+    }
+
+    public enum UIEvent // UI 이벤트
+    {
+        Click, // 클릭
+        Drag // 드래그
     }
 }

@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
         Managers.Input.MouseAction -= OnMouseClicked;
         Managers.Input.MouseAction += OnMouseClicked;
 
-        //Managers.Resource.Instantiate("UI/UI_Button"); // ResourceManager에서 UI_Button Prefab 호출
+        //Managers.Resource.Instantiate("UI/UI_Button"); // ResourceManager에서 UI_Button Prefab 호출 // 다른 테스트를 위해 삭제
     }
 
     public enum PlayerState
